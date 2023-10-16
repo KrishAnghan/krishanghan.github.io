@@ -98,12 +98,10 @@
           // Get the channel name and the latest entry
           const channelName = data.channel.name;
           const feeds = data.feeds;
-          const latestEntry = feeds.reduce((latest, current) => {
-            return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
-          });
+          const latestEntry = feeds[feeds.length - 1]; // Get the latest entry
 
-          // Check if the data is within the specified range
-          const dataValue = parseFloat(latestEntry.entry_id); // Assuming field1 contains the data
+          // Check if the data in field3 is within the specified range
+          const dataValue = parseFloat(latestEntry.field3);
           const isInRange = dataValue >= dataRange[0] && dataValue <= dataRange[1];
 
           // Loop through parking spots and apply classes based on data range
@@ -116,7 +114,7 @@
 
           // Create a new paragraph element to display the data
           const paragraph = document.createElement('p');
-          paragraph.textContent = `Latest Entry ID for ${channelName}: ${latestEntry.entry_id}`;
+          paragraph.textContent = `Latest Data for ${channelName}: A1 - ${dataValue}`;
 
           // Append the paragraph to the API data div
           apiDataDiv.appendChild(paragraph);

@@ -103,9 +103,25 @@
             return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
           });
 
+          // Create a new paragraph element to display the data
+          const paragraph = document.createElement('p');
+          paragraph.textContent = `Latest Data for ${channelName}:`;
+
+          if (latestEntry.field1 !== undefined) {
+            paragraph.textContent += ` A1 - ${latestEntry.field1}`;
+          }
+
+          if (latestEntry.field2 !== undefined) {
+            paragraph.textContent += ` B1 - ${latestEntry.field2}`;
+          }
+
+          // Append the paragraph to the API data div
+          apiDataDiv.appendChild(paragraph);
+
           // Check if the data is within the specified range
-          const dataValue = parseFloat(latestEntry.entry_id); // Assuming field1 contains the data
-          const isInRange = dataValue >= dataRange[0] && dataValue <= dataRange[1];
+          const isField1InRange = latestEntry.field1 >= dataRange[0] && latestEntry.field1 <= dataRange[1];
+          const isField2InRange = latestEntry.field2 >= dataRange[0] && latestEntry.field2 <= dataRange[1];
+          const isInRange = isField1InRange || isField2InRange; // Modify as needed
 
           // Loop through parking spots and apply classes based on data range
           parkingSpots.forEach((spot, index) => {
@@ -114,13 +130,6 @@
               spot.classList.add('red');
             }
           });
-
-          // Create a new paragraph element to display the data
-          const paragraph = document.createElement('p');
-          paragraph.textContent = `Latest Entry ID for ${channelName}: ${latestEntry.entry_id}`;
-
-          // Append the paragraph to the API data div
-          apiDataDiv.appendChild(paragraph);
         })
         .catch(error => {
           console.error(`Error fetching data from ${apiUrl}:`, error);
